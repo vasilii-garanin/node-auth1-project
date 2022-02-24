@@ -8,6 +8,7 @@
 */
 function restricted(req, res, next)
 {
+    console.log('restricted middleware')
     next();
 }
 
