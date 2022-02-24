@@ -1,3 +1,5 @@
+const User = require('../users/users-model');
+
 /*
   If the user does not have a session saved in the server
 
@@ -8,7 +10,7 @@
 */
 function restricted(req, res, next)
 {
-    console.log('restricted middleware')
+    console.log('restricted middleware');
     next();
 }
 
@@ -20,9 +22,23 @@ function restricted(req, res, next)
     "message": "Username taken"
   }
 */
-function checkUsernameFree(req, res, next)
+async function checkUsernameFree(req, res, next)
 {
-    next();
+    try
+    {
+        const users = await User.findBy({ username: req.body.username });
+        if (!users.length)
+        {
+            next();
+        } else 
+        {
+            next({ "message": "Username taken" });
+        }
+    }
+    catch (error)
+    {
+        next(error);
+    }
 }
 
 /*
